@@ -1,12 +1,8 @@
-#include "vrpn_Shared.h"
-#include "vrpn_BufferUtils.h"
+#include <math.h>                       // for floor, fmod
+#include <stddef.h>                     // for size_t
 
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h> // for exit()
-#ifndef	_WIN32_WCE
-#  include <sys/types.h>
-#endif
+#include "vrpn_BufferUtils.h"           // for vrpn_unbuffer, vrpn_buffer
+#include "vrpn_Shared.h"
 
 // Don't tell us about strcpy being dangerous.
 #ifdef	_WIN32
@@ -17,11 +13,12 @@
 #include <unistd.h>
 #endif
 
-#include <string.h>  // for memcpy()
-
 #if !( defined(_WIN32) && defined(VRPN_USE_WINSOCK_SOCKETS) )
-#include <netinet/in.h>
+#include <sys/select.h>                 // for select
+#include <netinet/in.h>                 // for htonl, htons
 #endif
+
+#include <stdlib.h>                     // for exit 
 
 //#include "vrpn_cygwin_hack.h"
 
@@ -699,7 +696,7 @@ int vrpn_unbuffer (const char ** buffer, char * string,
 #ifndef VRPN_UNSAFE_WINDOWS_CLOCK
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
-#include <math.h>
+#include <math.h>                       // for floor, fmod
 
 #pragma optimize("", on)
 
@@ -779,7 +776,7 @@ int vrpn_gettimeofday(timeval *tp, void *voidp)
 // They claim it will be fixed in the next release, version b21
 // so until then, we will make it right using our solution.
 #if defined(_WIN32) && !defined(__CYGWIN__)
-#include <math.h>
+#include <math.h>                       // for floor, fmod
 
 // utility routines to read the pentium time stamp counter
 // QueryPerfCounter drifts too much -- others have documented this
@@ -1131,11 +1128,11 @@ static int __iTrash = vrpn_gettimeofday(&__tv, (struct timezone *)NULL);
 #endif // VRPN_UNSAFE_WINDOWS_CLOCK
 
 
-#include <stdio.h>
-#include <string.h>
+#include <stdio.h>                      // for fprintf, stderr, perror, etc
+#include <string.h>                     // for memcpy, strlen, strcpy, etc
 #ifndef _WIN32
-#include <errno.h>
-#include <signal.h>
+#include <errno.h>                      // for EAGAIN, errno
+#include <signal.h>                     // for pthread_kill, SIGKILL
 #endif
 
 #define ALL_ASSERT(exp, msg) if(!(exp)){ fprintf(stderr, "\nAssertion failed! \n %s (%s, %s)\n", msg, __FILE__, __LINE__); exit(-1);}
@@ -1470,9 +1467,9 @@ int vrpn_Semaphore::numResources() {
 #ifdef sgi
 usptr_t *vrpn_Semaphore::ppaArena = NULL;
 
+#include <sys/stat.h>
 // for umask stuff
 #include <sys/types.h>
-#include <sys/stat.h>
 
 void vrpn_Semaphore::allocArena() {
   // /dev/zero is a special file which can only be shared between

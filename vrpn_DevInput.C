@@ -11,19 +11,19 @@
 #include "vrpn_DevInput.h"
 
 #ifdef VRPN_USE_DEV_INPUT
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <linux/input.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/ioctl.h>
-
-#include <iostream>
-#include <map>
-#include <string>
+#include <sys/select.h>                 // for select, FD_ISSET, FD_SET, etc
+#include <vrpn_Shared.h>                // for vrpn_gettimeofday
+#include <unistd.h>                     // for close, read
+#include <utility>                      // for pair
+#include <fcntl.h>                      // for open, O_RDONLY
+#include <linux/input.h>                // for input_event, ABS_MAX, etc
+#include <errno.h>                      // for errno, EACCES, ENOENT
+#include <string.h>                     // for strcmp, NULL, strerror
+#include <sys/ioctl.h>                  // for ioctl
+#include <iostream>                     // for operator<<, ostringstream, etc
+#include <map>                          // for map, _Rb_tree_iterator, etc
 #include <sstream>
+#include <string>                       // for string, allocator, etc
 
 static const std::string &getDeviceNodes(const std::string &device_name) {
   static std::map<std::string, std::string> s_devicesNodes;
