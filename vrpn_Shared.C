@@ -18,7 +18,7 @@
 #include <netinet/in.h>                 // for htonl, htons
 #endif
 
-#include <stdlib.h>                     // for exit 
+#include <stdlib.h>                     // for exit // IWYU pragma: keep
 
 //#include "vrpn_cygwin_hack.h"
 
